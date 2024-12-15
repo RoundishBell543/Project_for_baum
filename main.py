@@ -1,5 +1,5 @@
 import sys
-from PyQt6.QtWidgets import QMainWindow, QApplication
+from PyQt6.QtWidgets import QMainWindow, QApplication, QWidget
 import main_window as mw
 
 class MainWindow(QMainWindow, mw.Ui_MainWindow):
@@ -10,12 +10,22 @@ class MainWindow(QMainWindow, mw.Ui_MainWindow):
         self.pushButton_2.clicked.connect(self.trigonometric_function)
 
     def line_chart(self):
-        pass
+        self.window_line = Line_chart(self)
+        self.window_line.show()
     def trigonometric_function(self):
         pass
 
     def three_D_chart(self):
         pass
+
+class Line_chart(QWidget):
+    def __init__(self, *args):
+        super().__init__()
+        self.initUI(args)
+
+    def initUi(self):
+        self.setGeometry(100, 100, 800, 600)
+        self.setWindowTitle("Линейная функция")
 
 
 
