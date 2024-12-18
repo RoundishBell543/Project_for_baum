@@ -3,16 +3,17 @@ import numpy as np
 from PyQt6.QtWidgets import (
     QApplication, QMainWindow, QVBoxLayout, QWidget, QLabel, QLineEdit, QPushButton
 )
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.backends.backend_qt5agg import (
+    FigureCanvasQTAgg as FigureCanvas
+)
 from matplotlib.figure import Figure
-from mpl_toolkits.mplot3d import Axes3D
 
 
-class Plot3DApp(QMainWindow):
+class ParabolaPlotter(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("3D Графики")
-        self.setGeometry(100, 100, 1000, 700)
+        self.setWindowTitle("Построение графика функции")
+        self.setGeometry(100, 100, 800, 600)
 
         # Основной виджет
         self.main_widget = QWidget(self)
@@ -22,9 +23,7 @@ class Plot3DApp(QMainWindow):
         layout = QVBoxLayout(self.main_widget)
 
         # Поле ввода функции
-        self.label = QLabel(
-            "Введите функцию от x и y (например, np.sin(np.sqrt(x**2 + y**2))):", self
-        )
+        self.label = QLabel("Введите функцию (например, x**2 + 2*x + 1):", self)
         layout.addWidget(self.label)
 
         self.input_field = QLineEdit(self)
@@ -46,41 +45,32 @@ class Plot3DApp(QMainWindow):
 
         # Очистка предыдущего графика
         self.figure.clear()
-        ax = self.figure.add_subplot(111, projection="3d")
+        ax = self.figure.add_subplot(111)
 
         try:
-            # Создание сетки значений x и y
-            x = np.linspace(-5, 5, 100)
-            y = np.linspace(-5, 5, 100)
-            X, Y = np.meshgrid(x, y)
+            # Создание массива значений x
+            x = np.linspace(-10, 10, 1000)
+            # Вычисление значений y по введённой функции
+            y = [eval(function_text, {"x": val, "np": np}) for val in x]
 
-            # Вычисление значений z по введённой функции
-            Z = eval(function_text, {"x": X, "y": Y, "np": np})
-
-            # Построение 3D графика
-            ax.plot_surface(X, Y, Z, cmap="viridis", edgecolor="k", alpha=0.8)
-            ax.set_title("3D График функции")
-            ax.set_xlabel("X")
-            ax.set_ylabel("Y")
-            ax.set_zlabel("Z")
+            # Построение графика
+            ax.plot(x, y, label=f"y = {function_text}")
+            ax.set_title("График функции")
+            ax.set_xlabel("x")
+            ax.set_ylabel("y")
+            ax.legend()
+            ax.grid()
 
             # Отобразить график
             self.canvas.draw()
         except Exception as e:
             # В случае ошибки показать сообщение
-            ax.text2D(
-                0.5,
-                0.5,
-                f"Ошибка: {e}",
-                fontsize=12,
-                ha="center",
-                transform=ax.transAxes,
-            )
+            ax.text(0.5, 0.5, f"Ошибка: {e}", fontsize=12, ha='center', transform=ax.transAxes)
             self.canvas.draw()
 
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    window = Plot3DApp()
+    window = ParabolaPlotter()
     window.show()
     sys.exit(app.exec())

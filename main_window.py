@@ -41,5 +41,5 @@ class Ui_MainWindow(object):
         self.label.setText(_translate("MainWindow", "      Это приложение может помочь вам с графиками "))
         self.pushButton.setText(_translate("MainWindow", "Построить линейный график"))
         self.pushButton_2.setText(_translate("MainWindow", "Построить график тригонаметрической функции"))
-        self.pushButton_3.setText(_translate("MainWindow", "Построить 3D график"))
+        self.pushButton_3.setText(_translate("MainWindow", "Построить круговой график"))
         self.pushButton_4.setText(_translate("MainWindow", "Построить график: Парабола"))
